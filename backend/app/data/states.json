@@ -1,0 +1,230 @@
+[
+  {
+    "state_id": "AN",
+    "state_name": "Andaman and Nicobar Islands",
+    "region": "Island",
+    "total_districts": 3
+  },
+  {
+    "state_id": "AP",
+    "state_name": "Andhra Pradesh",
+    "region": "South",
+    "total_districts": 13
+  },
+  {
+    "state_id": "AR",
+    "state_name": "Arunachal Pradesh",
+    "region": "Northeast",
+    "total_districts": 25
+  },
+  {
+    "state_id": "AS",
+    "state_name": "Assam",
+    "region": "Northeast",
+    "total_districts": 33
+  },
+  {
+    "state_id": "BR",
+    "state_name": "Bihar",
+    "region": "East",
+    "total_districts": 38
+  },
+  {
+    "state_id": "CG",
+    "state_name": "Chhattisgarh",
+    "region": "Central",
+    "total_districts": 27
+  },
+  {
+    "state_id": "CH",
+    "state_name": "Chandigarh",
+    "region": "North",
+    "total_districts": 1
+  },
+  {
+    "state_id": "CT",
+    "state_name": "Chhattisgarh",
+    "region": "Central",
+    "total_districts": 27
+  },
+  {
+    "state_id": "DD",
+    "state_name": "Daman and Diu",
+    "region": "West",
+    "total_districts": 2
+  },
+  {
+    "state_id": "DL",
+    "state_name": "Delhi",
+    "region": "North",
+    "total_districts": 11
+  },
+  {
+    "state_id": "DN",
+    "state_name": "Dadra and Nagar Haveli",
+    "region": "West",
+    "total_districts": 1
+  },
+  {
+    "state_id": "GA",
+    "state_name": "Goa",
+    "region": "West",
+    "total_districts": 2
+  },
+  {
+    "state_id": "GJ",
+    "state_name": "Gujarat",
+    "region": "West",
+    "total_districts": 33
+  },
+  {
+    "state_id": "HR",
+    "state_name": "Haryana",
+    "region": "North",
+    "total_districts": 23
+  },
+  {
+    "state_id": "HP",
+    "state_name": "Himachal Pradesh",
+    "region": "North",
+    "total_districts": 12
+  },
+  {
+    "state_id": "JK",
+    "state_name": "Jammu and Kashmir",
+    "region": "North",
+    "total_districts": 20
+  },
+  {
+    "state_id": "JH",
+    "state_name": "Jharkhand",
+    "region": "East",
+    "total_districts": 24
+  },
+  {
+    "state_id": "KA",
+    "state_name": "Karnataka",
+    "region": "South",
+    "total_districts": 31
+  },
+  {
+    "state_id": "KL",
+    "state_name": "Kerala",
+    "region": "South",
+    "total_districts": 14
+  },
+  {
+    "state_id": "LA",
+    "state_name": "Ladakh",
+    "region": "North",
+    "total_districts": 2
+  },
+  {
+    "state_id": "LD",
+    "state_name": "Lakshadweep",
+    "region": "Island",
+    "total_districts": 1
+  },
+  {
+    "state_id": "MH",
+    "state_name": "Maharashtra",
+    "region": "West",
+    "total_districts": 36
+  },
+  {
+    "state_id": "ML",
+    "state_name": "Meghalaya",
+    "region": "Northeast",
+    "total_districts": 11
+  },
+  {
+    "state_id": "MN",
+    "state_name": "Manipur",
+    "region": "Northeast",
+    "total_districts": 16
+  },
+  {
+    "state_id": "MP",
+    "state_name": "Madhya Pradesh",
+    "region": "Central",
+    "total_districts": 52
+  },
+  {
+    "state_id": "MZ",
+    "state_name": "Mizoram",
+    "region": "Northeast",
+    "total_districts": 11
+  },
+  {
+    "state_id": "NL",
+    "state_name": "Nagaland",
+    "region": "Northeast",
+    "total_districts": 12
+  },
+  {
+    "state_id": "OD",
+    "state_name": "Odisha",
+    "region": "East",
+    "total_districts": 30
+  },
+  {
+    "state_id": "PB",
+    "state_name": "Punjab",
+    "region": "North",
+    "total_districts": 23
+  },
+  {
+    "state_id": "PY",
+    "state_name": "Puducherry",
+    "region": "South",
+    "total_districts": 4
+  },
+  {
+    "state_id": "RJ",
+    "state_name": "Rajasthan",
+    "region": "North",
+    "total_districts": 33
+  },
+  {
+    "state_id": "SK",
+    "state_name": "Sikkim",
+    "region": "Northeast",
+    "total_districts": 4
+  },
+  {
+    "state_id": "TG",
+    "state_name": "Telangana",
+    "region": "South",
+    "total_districts": 33
+  },
+  {
+    "state_id": "TN",
+    "state_name": "Tamil Nadu",
+    "region": "South",
+    "total_districts": 38
+  },
+  {
+    "state_id": "TR",
+    "state_name": "Tripura",
+    "region": "Northeast",
+    "total_districts": 8
+  },
+  {
+    "state_id": "UP",
+    "state_name": "Uttar Pradesh",
+    "region": "North",
+    "total_districts": 75
+  },
+  {
+    "state_id": "UT",
+    "state_name": "Uttarakhand",
+    "region": "North",
+    "total_districts": 13
+  },
+  {
+    "state_id": "WB",
+    "state_name": "West Bengal",
+    "region": "East",
+    "total_districts": 23
+  }
+]

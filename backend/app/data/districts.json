@@ -1,0 +1,282 @@
+[
+  {
+    "district_id": "MP_MAN",
+    "district_name": "Mandla",
+    "state_id": "MP",
+    "state_name": "Madhya Pradesh",
+    "area_sq_km": 5091.0,
+    "coordinates": {
+      "latitude": 22.5833,
+      "longitude": 80.6333
+    },
+    "region": "Central",
+    "has_forest": true,
+    "forest_area_percent": 42.5
+  },
+  {
+    "district_id": "MP_BRS",
+    "district_name": "Balaghat",
+    "state_id": "MP",
+    "state_name": "Madhya Pradesh",
+    "area_sq_km": 5359.0,
+    "coordinates": {
+      "latitude": 21.9167,
+      "longitude": 80.1667
+    },
+    "region": "Central",
+    "has_forest": true,
+    "forest_area_percent": 48.2
+  },
+  {
+    "district_id": "MP_DIN",
+    "district_name": "Dindori",
+    "state_id": "MP",
+    "state_name": "Madhya Pradesh",
+    "area_sq_km": 3664.0,
+    "coordinates": {
+      "latitude": 22.8667,
+      "longitude": 81.5333
+    },
+    "region": "Central",
+    "has_forest": true,
+    "forest_area_percent": 51.3
+  },
+  {
+    "district_id": "MP_HOS",
+    "district_name": "Hoshangabad",
+    "state_id": "MP",
+    "state_name": "Madhya Pradesh",
+    "area_sq_km": 4615.0,
+    "coordinates": {
+      "latitude": 22.4333,
+      "longitude": 77.7333
+    },
+    "region": "Central",
+    "has_forest": true,
+    "forest_area_percent": 35.8
+  },
+  {
+    "district_id": "CG_BAS",
+    "district_name": "Bastar",
+    "state_id": "CG",
+    "state_name": "Chhattisgarh",
+    "area_sq_km": 13421.0,
+    "coordinates": {
+      "latitude": 19.3333,
+      "longitude": 81.8333
+    },
+    "region": "Central",
+    "has_forest": true,
+    "forest_area_percent": 69.5
+  },
+  {
+    "district_id": "CG_KAN",
+    "district_name": "Kanker",
+    "state_id": "CG",
+    "state_name": "Chhattisgarh",
+    "area_sq_km": 5827.0,
+    "coordinates": {
+      "latitude": 19.9333,
+      "longitude": 81.3333
+    },
+    "region": "Central",
+    "has_forest": true,
+    "forest_area_percent": 72.1
+  },
+  {
+    "district_id": "CG_RIA",
+    "district_name": "Raigarh",
+    "state_id": "CG",
+    "state_name": "Chhattisgarh",
+    "area_sq_km": 3640.0,
+    "coordinates": {
+      "latitude": 21.4833,
+      "longitude": 83.4
+    },
+    "region": "Central",
+    "has_forest": true,
+    "forest_area_percent": 45.3
+  },
+  {
+    "district_id": "OD_KAL",
+    "district_name": "Kalahandi",
+    "state_id": "OD",
+    "state_name": "Odisha",
+    "area_sq_km": 6355.0,
+    "coordinates": {
+      "latitude": 19.8,
+      "longitude": 82.7
+    },
+    "region": "East",
+    "has_forest": true,
+    "forest_area_percent": 58.2
+  },
+  {
+    "district_id": "OD_NBA",
+    "district_name": "Nuapada",
+    "state_id": "OD",
+    "state_name": "Odisha",
+    "area_sq_km": 3473.0,
+    "coordinates": {
+      "latitude": 19.45,
+      "longitude": 82.0833
+    },
+    "region": "East",
+    "has_forest": true,
+    "forest_area_percent": 61.8
+  },
+  {
+    "district_id": "AR_PPA",
+    "district_name": "Papum Pare",
+    "state_id": "AR",
+    "state_name": "Arunachal Pradesh",
+    "area_sq_km": 3934.0,
+    "coordinates": {
+      "latitude": 28.2167,
+      "longitude": 93.6
+    },
+    "region": "Northeast",
+    "has_forest": true,
+    "forest_area_percent": 78.5
+  },
+  {
+    "district_id": "JH_WES",
+    "district_name": "West Singhbhum",
+    "state_id": "JH",
+    "state_name": "Jharkhand",
+    "area_sq_km": 4373.0,
+    "coordinates": {
+      "latitude": 22.7333,
+      "longitude": 84.55
+    },
+    "region": "East",
+    "has_forest": true,
+    "forest_area_percent": 42.7
+  },
+  {
+    "district_id": "AP_VIS",
+    "district_name": "Visakhapatnam",
+    "state_id": "AP",
+    "state_name": "Andhra Pradesh",
+    "area_sq_km": 11391.0,
+    "coordinates": {
+      "latitude": 17.6869,
+      "longitude": 83.2197
+    },
+    "region": "South",
+    "has_forest": true,
+    "forest_area_percent": 35.2
+  },
+  {
+    "district_id": "KA_UDU",
+    "district_name": "Udupi",
+    "state_id": "KA",
+    "state_name": "Karnataka",
+    "area_sq_km": 3766.0,
+    "coordinates": {
+      "latitude": 13.3344,
+      "longitude": 74.7421
+    },
+    "region": "South",
+    "has_forest": true,
+    "forest_area_percent": 28.5
+  },
+  {
+    "district_id": "KL_IDA",
+    "district_name": "Idukki",
+    "state_id": "KL",
+    "state_name": "Kerala",
+    "area_sq_km": 4479.0,
+    "coordinates": {
+      "latitude": 10.0469,
+      "longitude": 76.8811
+    },
+    "region": "South",
+    "has_forest": true,
+    "forest_area_percent": 56.3
+  },
+  {
+    "district_id": "MH_GAD",
+    "district_name": "Gadchiroli",
+    "state_id": "MH",
+    "state_name": "Maharashtra",
+    "area_sq_km": 6627.0,
+    "coordinates": {
+      "latitude": 20.1833,
+      "longitude": 79.5667
+    },
+    "region": "West",
+    "has_forest": true,
+    "forest_area_percent": 71.4
+  },
+  {
+    "district_id": "GJ_DAH",
+    "district_name": "Dahod",
+    "state_id": "GJ",
+    "state_name": "Gujarat",
+    "area_sq_km": 3605.0,
+    "coordinates": {
+      "latitude": 22.8667,
+      "longitude": 74.1667
+    },
+    "region": "West",
+    "has_forest": true,
+    "forest_area_percent": 39.1
+  },
+  {
+    "district_id": "RJ_BAN",
+    "district_name": "Banswara",
+    "state_id": "RJ",
+    "state_name": "Rajasthan",
+    "area_sq_km": 5037.0,
+    "coordinates": {
+      "latitude": 23.5456,
+      "longitude": 74.4306
+    },
+    "region": "North",
+    "has_forest": true,
+    "forest_area_percent": 32.4
+  },
+  {
+    "district_id": "AS_KAM",
+    "district_name": "Kamrup",
+    "state_id": "AS",
+    "state_name": "Assam",
+    "area_sq_km": 4325.0,
+    "coordinates": {
+      "latitude": 26.2,
+      "longitude": 91.5833
+    },
+    "region": "Northeast",
+    "has_forest": true,
+    "forest_area_percent": 19.3
+  },
+  {
+    "district_id": "UP_SON",
+    "district_name": "Sonbhadra",
+    "state_id": "UP",
+    "state_name": "Uttar Pradesh",
+    "area_sq_km": 6523.0,
+    "coordinates": {
+      "latitude": 24.2667,
+      "longitude": 83.2333
+    },
+    "region": "North",
+    "has_forest": true,
+    "forest_area_percent": 44.2
+  },
+  {
+    "district_id": "WB_PIL",
+    "district_name": "Purulia",
+    "state_id": "WB",
+    "state_name": "West Bengal",
+    "area_sq_km": 6259.0,
+    "coordinates": {
+      "latitude": 23.5,
+      "longitude": 84.75
+    },
+    "region": "East",
+    "has_forest": true,
+    "forest_area_percent": 26.8
+  }
+]
