@@ -9,6 +9,7 @@ from app.api.routes import (
     districts,
     dashboard,
     metrics,
+    ai,
 )
 
 api_router = APIRouter(prefix="/api")
@@ -21,3 +22,4 @@ api_router.include_router(states.router)
 api_router.include_router(districts.router)
 api_router.include_router(dashboard.router)
 api_router.include_router(metrics.router)
+api_router.include_router(ai.router)

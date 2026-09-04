@@ -63,3 +63,12 @@ FEATURES = {
 
 # Logging
 LOG_LEVEL = os.getenv("LOG_LEVEL", "INFO")
+
+# AI explanation provider settings. The API key is read only by the backend.
+AI_PROVIDER_ENABLED = os.getenv("AI_PROVIDER_ENABLED", "false").lower() == "true"
+AI_PROVIDER_BASE_URL = os.getenv(
+    "AI_PROVIDER_BASE_URL", "https://api.openai.com/v1"
+).rstrip("/")
+AI_PROVIDER_MODEL = os.getenv("AI_PROVIDER_MODEL", "gpt-4o-mini")
+AI_PROVIDER_API_KEY = os.getenv("AI_PROVIDER_API_KEY", "")
+AI_PROVIDER_TIMEOUT_SECONDS = float(os.getenv("AI_PROVIDER_TIMEOUT_SECONDS", "15"))
