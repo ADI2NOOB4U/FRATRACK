@@ -1,8 +1,10 @@
 import json
+
 from app.core.config import CLAIMS_FILE
 
 
 class ClaimService:
+
     def __init__(self):
         self.claims = self._load_claims()
 
@@ -10,7 +12,7 @@ class ClaimService:
         with open(CLAIMS_FILE, "r", encoding="utf-8") as file:
             return json.load(file)
 
-    def refresh(self) -> None:
+    def refresh(self):
         self.claims = self._load_claims()
 
     def get_all(
@@ -25,13 +27,13 @@ class ClaimService:
         if state_id:
             claims = [
                 c for c in claims
-                if c["state_id"] == state_id
+                if c["state_id"].upper() == state_id.upper()
             ]
 
         if district_id:
             claims = [
                 c for c in claims
-                if c["district_id"] == district_id
+                if c["district_id"].upper() == district_id.upper()
             ]
 
         if status:
@@ -45,9 +47,8 @@ class ClaimService:
     def get_by_id(self, claim_id: str) -> dict | None:
         return next(
             (
-                claim
-                for claim in self.claims
-                if claim["claim_id"] == claim_id
+                c for c in self.claims
+                if c["claim_id"] == claim_id
             ),
             None,
         )
