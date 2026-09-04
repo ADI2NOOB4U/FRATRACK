@@ -1,6 +1,7 @@
 from fastapi import APIRouter, HTTPException
 
 from app.services.anomaly.engine import analyze_district
+from app.services.claim_service import claim_service
 from app.services.geospatial.geo import geo_service
 
 router = APIRouter(prefix="/risk-score", tags=["Risk Score"])
@@ -8,7 +9,10 @@ router = APIRouter(prefix="/risk-score", tags=["Risk Score"])
 
 @router.get("/{district_id}")
 def get_risk_score(district_id: str):
-    if not geo_service.get_district_exists(district_id):
+    if (
+        not geo_service.get_district_exists(district_id)
+        and not claim_service.get_all(district_id=district_id)
+    ):
         raise HTTPException(
             status_code=404,
             detail="District not found",

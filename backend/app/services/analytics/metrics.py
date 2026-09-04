@@ -1,14 +1,9 @@
 import json
 from datetime import date
-from pathlib import Path
 
+from app.core.config import CLAIMS_FILE
 
-DATA_FILE = (
-    Path(__file__).resolve().parents[2]
-    / "data"
-    / "synthetic"
-    / "claims.json"
-)
+DATA_FILE = CLAIMS_FILE
 
 
 def load_claims() -> list[dict]:
@@ -42,9 +37,9 @@ def calculate_metrics(claims: list[dict]) -> dict:
             "avg_processing_days": 0,
         }
 
-    pending = sum(1 for c in claims if c["status"] == "pending")
-    approved = sum(1 for c in claims if c["status"] == "approved")
-    rejected = sum(1 for c in claims if c["status"] == "rejected")
+    pending = sum(1 for c in claims if c["status"].casefold() == "pending")
+    approved = sum(1 for c in claims if c["status"].casefold() == "approved")
+    rejected = sum(1 for c in claims if c["status"].casefold() == "rejected")
 
     processing_days = [
         calculate_processing_days(c)

@@ -1,17 +1,13 @@
 import json
 from datetime import date
-from pathlib import Path
 from statistics import mean, stdev
 
+from app.core.config import CLAIMS_FILE
 from app.services.anomaly.ml_detector import MLAnomalyDetector, get_ml_detector
+from app.services.claim_service import claim_service
 
 
-DATA_FILE = (
-    Path(__file__).resolve().parents[2]
-    / "data"
-    / "synthetic"
-    / "claims.json"
-)
+DATA_FILE = CLAIMS_FILE
 _ML_DETECTOR: MLAnomalyDetector | None = None
 _ML_DETECTOR_MTIME: int | None = None
 
@@ -32,8 +28,7 @@ def ml_detector() -> MLAnomalyDetector | None:
 
 
 def load_claims() -> list[dict]:
-    with open(DATA_FILE, "r", encoding="utf-8") as file:
-        return json.load(file)
+    return claim_service.get_all()
 
 
 def processing_days(claim: dict) -> int:
@@ -354,12 +349,7 @@ def calculate_risk_score(
 
 def analyze_district(district_id: str) -> dict:
     all_claims = load_claims()
-
-    district_claims = [
-        claim
-        for claim in all_claims
-        if claim["district_id"] == district_id
-    ]
+    district_claims = claim_service.get_all(district_id=district_id)
 
     if not district_claims:
         return {

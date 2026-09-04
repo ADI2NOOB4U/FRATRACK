@@ -22,10 +22,10 @@ class MetricsService:
                 "avg_processing_days": 0,
             }
 
-        pending = sum(c["status"] == "pending" for c in claims)
-        approved = sum(c["status"] == "approved" for c in claims)
-        rejected = sum(c["status"] == "rejected" for c in claims)
-        withdrawn = sum(c["status"] == "withdrawn" for c in claims)
+        pending = sum(c["status"].casefold() == "pending" for c in claims)
+        approved = sum(c["status"].casefold() == "approved" for c in claims)
+        rejected = sum(c["status"].casefold() == "rejected" for c in claims)
+        withdrawn = sum(c["status"].casefold() == "withdrawn" for c in claims)
 
         from app.services.analytics.metrics import calculate_processing_days
 

@@ -6,7 +6,7 @@ from typing import Literal
 DATA_DIR = Path(__file__).parent.parent / "data"
 STATES_FILE = DATA_DIR / "states.json"
 DISTRICTS_FILE = DATA_DIR / "districts.json"
-CLAIMS_FILE = DATA_DIR / "synthetic" / "claims.json"
+CLAIMS_FILE = DATA_DIR / "synthetic" / "claims_expanded.json"
 
 # Database settings (for future migration)
 # Can be: "json" | "sqlite" | "postgres"
