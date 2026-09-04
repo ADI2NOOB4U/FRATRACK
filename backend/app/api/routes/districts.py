@@ -1,38 +1,80 @@
-from fastapi import APIRouter
-from app.services.analytics.metrics import load_claims, calculate_metrics
-from app.services.anomaly.engine import analyze_district
+from fastapi import APIRouter, HTTPException, Query
+
+from app.services.geospatial.geo import geo_service
+from app.services.metrics_service import metrics_service
 
 router = APIRouter(prefix="/districts", tags=["Districts"])
 
 
 @router.get("/")
-def get_districts(state_id: str | None = None):
-    claims = load_claims()
+def get_districts(
+    state_id: str | None = Query(default=None),
+    search: str | None = Query(default=None),
+    sort: str = Query(default="risk_score"),
+    order: str = Query(default="desc"),
+    page: int = Query(default=1, ge=1),
+    limit: int = Query(default=20, ge=1, le=100),
+):
+    if search:
+        districts = geo_service.search_districts(search)
 
-    if state_id:
-        claims = [c for c in claims if c["state_id"] == state_id]
+        if state_id:
+            districts = [
+                d for d in districts
+                if d["state_id"] == state_id
+            ]
 
-    district_ids = sorted(set(c["district_id"] for c in claims))
+        district_ids = [d["district_id"] for d in districts]
 
-    result = []
-
-    for district_id in district_ids:
-        district_claims = [
-            c for c in claims if c["district_id"] == district_id
+        ranking = [
+            d for d in metrics_service.get_district_ranking(state_id)
+            if d["district_id"] in district_ids
         ]
+    else:
+        ranking = metrics_service.get_district_ranking(state_id)
 
-        analysis = analyze_district(district_id)
+    valid_sort = {
+        "risk_score",
+        "pending_claims",
+        "avg_processing_days",
+        "rejection_rate",
+        "approval_rate",
+    }
 
-        result.append({
-            "district_id": district_id,
-            **calculate_metrics(district_claims),
-            "risk_score": analysis["risk_score"],
-            "risk_level": analysis["risk_level"],
-        })
+    if sort not in valid_sort:
+        sort = "risk_score"
 
-    result.sort(key=lambda x: x["risk_score"], reverse=True)
+    reverse = order.lower() != "asc"
+
+    ranking.sort(
+        key=lambda x: x.get(sort, 0),
+        reverse=reverse,
+    )
+
+    start = (page - 1) * limit
+    end = start + limit
 
     return {
-        "count": len(result),
-        "districts": result
+        "count": len(ranking),
+        "page": page,
+        "limit": limit,
+        "districts": ranking[start:end],
+    }
+
+
+@router.get("/{district_id}")
+def get_district(district_id: str):
+    district = geo_service.get_district(district_id)
+
+    if not district:
+        raise HTTPException(
+            status_code=404,
+            detail="District not found",
+        )
+
+    return {
+        **district,
+        **metrics_service.get_district_metrics(
+            district_id
+        ),
     }

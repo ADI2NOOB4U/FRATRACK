@@ -7,5 +7,5 @@ class Anomaly(BaseModel):
     category: str
     severity: str
     description: str
-    score_contribution: float
-    evidence: dict
+    score_contribution: float = 0
+    evidence: dict = {}

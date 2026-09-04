@@ -1,33 +1,36 @@
-import json
-from pathlib import Path
 from fastapi import APIRouter
+from app.services.geospatial.geo import geo_service
+from app.services.metrics_service import metrics_service
 
 router = APIRouter(prefix="/states", tags=["States"])
-
-DATA_FILE = (
-    Path(__file__).resolve().parents[3]
-    / "data"
-    / "synthetic"
-    / "claims.json"
-)
 
 
 @router.get("/")
 def get_states():
-    with open(DATA_FILE, "r", encoding="utf-8") as file:
-        claims = json.load(file)
+    states = []
 
-    states = {}
+    for state in geo_service.get_all_states():
+        metrics = metrics_service.get_state_metrics(state["state_id"])
 
-    for claim in claims:
-        state_id = claim["state_id"]
+        states.append({
+            **state,
+            **metrics,
+        })
 
-        if state_id not in states:
-            states[state_id] = {
-                "state_id": state_id,
-                "total_claims": 0,
-            }
+    return {
+        "count": len(states),
+        "states": states,
+    }
 
-        states[state_id]["total_claims"] += 1
 
-    return list(states.values())
+@router.get("/{state_id}")
+def get_state(state_id: str):
+    state = geo_service.get_state(state_id)
+
+    if not state:
+        return {"error": "State not found"}
+
+    return {
+        **state,
+        **metrics_service.get_state_metrics(state_id),
+    }
