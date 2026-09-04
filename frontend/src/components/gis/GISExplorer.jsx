@@ -191,6 +191,14 @@ function GISExplorer({ districtData, districtDataUrl = `${API_URL}/api/districts
   }, [matchingFeature, lookup])
 
   useEffect(() => {
+    if (!selected) return
+    const identity = canonicalDistrictIdentity(selected.feature)
+    const outsideState = stateFilter !== 'ALL' && identity.stateId !== normalizeState(stateFilter)
+    const outsideSearch = Boolean(search) && selected.feature !== matchingFeature
+    if (outsideState || outsideSearch) setSelected(null)
+  }, [matchingFeature, search, selected, stateFilter])
+
+  useEffect(() => {
     if (!selected) { setDetail({ data: null, loading: false, error: '' }); return undefined }
     const controller = new AbortController()
     const identity = canonicalDistrictIdentity(selected.feature)
