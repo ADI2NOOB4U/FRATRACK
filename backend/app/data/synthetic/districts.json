@@ -1,0 +1,86 @@
+[
+  {
+    "district_id": "D001",
+    "district_name": "Mandla",
+    "state_id": "S001",
+    "latitude": 22.5979,
+    "longitude": 80.3714
+  },
+  {
+    "district_id": "D002",
+    "district_name": "Dindori",
+    "state_id": "S001",
+    "latitude": 22.9432,
+    "longitude": 81.0775
+  },
+  {
+    "district_id": "D003",
+    "district_name": "Balaghat",
+    "state_id": "S001",
+    "latitude": 21.8106,
+    "longitude": 80.1838
+  },
+  {
+    "district_id": "D004",
+    "district_name": "Shahdol",
+    "state_id": "S001",
+    "latitude": 23.2951,
+    "longitude": 81.3619
+  },
+  {
+    "district_id": "D005",
+    "district_name": "Mayurbhanj",
+    "state_id": "S002",
+    "latitude": 21.9287,
+    "longitude": 86.7191
+  },
+  {
+    "district_id": "D006",
+    "district_name": "Koraput",
+    "state_id": "S002",
+    "latitude": 18.8135,
+    "longitude": 82.711
+  },
+  {
+    "district_id": "D007",
+    "district_name": "Kandhamal",
+    "state_id": "S002",
+    "latitude": 20.1341,
+    "longitude": 84.0139
+  },
+  {
+    "district_id": "D008",
+    "district_name": "Bastar",
+    "state_id": "S003",
+    "latitude": 19.1071,
+    "longitude": 81.9535
+  },
+  {
+    "district_id": "D009",
+    "district_name": "Dantewada",
+    "state_id": "S003",
+    "latitude": 18.9,
+    "longitude": 81.35
+  },
+  {
+    "district_id": "D010",
+    "district_name": "Kanker",
+    "state_id": "S003",
+    "latitude": 20.2719,
+    "longitude": 81.4917
+  },
+  {
+    "district_id": "D011",
+    "district_name": "West Singhbhum",
+    "state_id": "S004",
+    "latitude": 22.57,
+    "longitude": 85.8
+  },
+  {
+    "district_id": "D012",
+    "district_name": "Simdega",
+    "state_id": "S004",
+    "latitude": 22.615,
+    "longitude": 84.5
+  }
+]

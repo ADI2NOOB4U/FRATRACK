@@ -1,0 +1,18 @@
+[
+  {
+    "state_id": "S001",
+    "state_name": "Madhya Pradesh"
+  },
+  {
+    "state_id": "S002",
+    "state_name": "Odisha"
+  },
+  {
+    "state_id": "S003",
+    "state_name": "Chhattisgarh"
+  },
+  {
+    "state_id": "S004",
+    "state_name": "Jharkhand"
+  }
+]
