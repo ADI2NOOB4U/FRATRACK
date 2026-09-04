@@ -40,6 +40,9 @@ STATUS_WEIGHTS = {
 
 MIN_CLAIM_DATE = datetime(2010, 1, 1)
 MAX_SUBMISSION_DATE = datetime(2024, 12, 31)
+# Pending claims should represent relatively recent unresolved cases.
+MIN_PENDING_DATE = datetime(2023, 1, 1)
+MAX_PENDING_DATE = datetime(2025, 6, 30)
 
 # Fraction of completed (non-pending) claims considered "delayed" (long processing time)
 DELAYED_CLAIM_FRACTION = 0.15
@@ -321,12 +324,37 @@ def generate_claims(districts, total_claims, seed):
         status_weights = district_weights_cache[district["district_id"]]
         status = weighted_status_choice(rng, status_weights)
 
-        submission_date = random_date(rng, MIN_CLAIM_DATE, MAX_SUBMISSION_DATE)
-
         if status == "pending":
+            # Keep pending claims recent enough to produce realistic backlog ages.
+            submission_date = random_date(
+                rng,
+                MIN_PENDING_DATE,
+                MAX_PENDING_DATE
+            )
             processing_date = None
         else:
+            submission_date = random_date(
+                rng,
+                MIN_CLAIM_DATE,
+                MAX_SUBMISSION_DATE
+            )
+
             is_delayed = rng.random() < DELAYED_CLAIM_FRACTION
+
+            if is_delayed:
+                days = rng.randint(*DELAYED_PROCESSING_DAYS_RANGE)
+            else:
+                days = rng.randint(*NORMAL_PROCESSING_DAYS_RANGE)
+
+            processing_date = submission_date + timedelta(days=days)
+
+            if processing_date > datetime(2025, 6, 30):
+                processing_date = datetime(2025, 6, 30)
+
+            if processing_date <= submission_date:
+                processing_date = submission_date + timedelta(days=1)
+            else:
+             is_delayed = rng.random() < DELAYED_CLAIM_FRACTION
             if is_delayed:
                 days = rng.randint(*DELAYED_PROCESSING_DAYS_RANGE)
             else:
