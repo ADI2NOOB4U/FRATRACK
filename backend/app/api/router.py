@@ -1,6 +1,7 @@
 from fastapi import APIRouter
 
 from app.api.routes import (
+    risk_score,
     claims,
     anomalies,
     states,
@@ -10,7 +11,7 @@ from app.api.routes import (
 )
 
 api_router = APIRouter(prefix="/api")
-
+api_router.include_router(risk_score.router)
 api_router.include_router(claims.router)
 api_router.include_router(anomalies.router)
 api_router.include_router(states.router)
