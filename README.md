@@ -95,26 +95,7 @@ High
 Critical
 ```
 
-#                 FRA Claim Data
-                      ↓
-                Data Processing
-                      ↓
-            Risk & Anomaly Analysis
-                      ↓
-               GIS / GeoJSON
-                  Boundaries
-                      ↓
-              Interactive Map
-                      ↓
-           Decision Support Layer
-                      ↓
-        ┌─────────────┴─────────────┐
-        ↓                           ↓
-   Risk Visualization         AI Insights
-        ↓                           ↓
-        └─────────────┬─────────────┘
-                      ↓
-                FRATRACK Dashboard
+
 
 
 # Administrative Boundary Data
