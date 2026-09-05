@@ -147,5 +147,5 @@ FRATRACK/
 
 🚀 **Vercel Deployment**
 
-👉 **[वन Vision]((https://fratrack.vercel.app))**
+👉 **[वन Vision]https://fratrack.vercel.app**
 
