@@ -428,7 +428,7 @@ function AIPanel({ selectedDistrict, aiData, loading }) {
 // MAIN APP COMPONENT
 // ============================================================================
 
-function _LegacyApp() {
+function LegacyApp() {
   const [districts, setDistricts] = useState([])
   const [selectedDistrict, setSelectedDistrict] = useState(null)
   const [activeTab, setActiveTab] = useState('overview')
@@ -676,6 +676,7 @@ const SHELL_NAV = [
   ['/state-intelligence', 'State Intelligence', 'state'],
   ['/anomalies', 'Anomaly Radar', 'anomalies'],
   ['/reports', 'Reports', 'reports'],
+  ['/about-fra', 'About FRA', 'info'],
 ]
 
 function shellFormat(value) {
@@ -861,7 +862,7 @@ const APP_SHELL_STYLES = `
   @media (max-width: 680px) { .shell-content { padding: 25px 15px 50px; } .shell-topbar { padding: 0 15px; } .shell-hero { padding: 24px; } .shell-hero h1 { font-size: 42px; } .fra-info-page, .fra-fact-grid, .fra-law-grid, .fra-authority-grid { grid-template-columns: 1fr; } .fra-reference-hero { display: block; padding: 24px; } .fra-reference-seal { margin-top: 24px; } .fra-process { grid-template-columns: 1fr; } .fra-process-step, .fra-process-step:nth-child(2) { border-right: 0; border-bottom: 1px solid var(--vision-line); } .fra-process-step:last-child { border-bottom: 0; } .fra-principle-note { grid-template-columns: 1fr; } }
 `
 
-function ForestAILauncher({ open, onToggle, onClose, onNavigate }) {
+function ForestAILauncher({ open, onToggle, onClose, onNavigate, districtId, askQuestion, question, onQuestionChange, submitting, error }) {
   return (
     <>
       <button type="button" className="forest-ai-launcher" onClick={onToggle} aria-label="वन AI assistant" title="वन AI">
@@ -875,23 +876,27 @@ function ForestAILauncher({ open, onToggle, onClose, onNavigate }) {
           <div className="forest-ai-header">
             <div>
               <strong>वन AI</strong>
-              <span>Your forest intelligence assistant</span>
+              <span>District explanation support</span>
             </div>
             <button type="button" className="forest-ai-close" onClick={onClose} aria-label="Close वन AI">×</button>
           </div>
           <div className="forest-ai-chat">
-            <div className="forest-ai-message">I can help interpret district risk, anomaly pressure, and state-level evidence once the assistant service is connected.</div>
+            <div className="forest-ai-message">
+              {districtId
+                ? `I can explain the latest evidence for ${districtId}.`
+                : 'Open a district in FRA Monitor to ask for a live district explanation.'}
+            </div>
           </div>
           <div className="forest-ai-chips">
-            <button type="button" onClick={() => onNavigate('/state-intelligence')}>Which states need attention?</button>
-            <button type="button" onClick={() => onNavigate('/anomalies')}>Which districts have critical anomalies?</button>
-            <button type="button" onClick={() => onNavigate('/fra-monitor')}>Why is this district flagged?</button>
-            <button type="button" onClick={() => onNavigate('/state-intelligence')}>Compare two states.</button>
+            <button type="button" disabled={!districtId || submitting} onClick={() => askQuestion(districtId ? `Explain the risk and review context for ${districtId}.` : 'Explain the current district risk.')}>Explain district</button>
+            <button type="button" disabled={!districtId || submitting} onClick={() => askQuestion(districtId ? `What are the main review signals for ${districtId}?` : 'Which district needs review right now?')}>Review signals</button>
+            <button type="button" onClick={() => onNavigate('/fra-monitor')}>Open FRA Monitor</button>
           </div>
           <div className="forest-ai-input-row">
-            <input type="text" placeholder="Open FRA Monitor for evidence" readOnly onFocus={() => onNavigate('/fra-monitor')} />
-            <button type="button" onClick={() => onNavigate('/fra-monitor')}>Open</button>
+            <input type="text" value={question} onChange={(event) => onQuestionChange(event.target.value)} placeholder={districtId ? `Ask the district assistant about ${districtId}` : 'Choose a district to ask'} disabled={!districtId || submitting} />
+            <button type="button" onClick={() => askQuestion()} disabled={!districtId || submitting}>{submitting ? '…' : 'Send'}</button>
           </div>
+          {error && <div className="forest-ai-error">{error}</div>}
         </div>
       )}
     </>
@@ -905,13 +910,46 @@ function App() {
   const [aiOpen, setAiOpen] = useState(false)
   const [overviewLoading, setOverviewLoading] = useState(true)
   const [overviewError, setOverviewError] = useState('')
+  const [aiQuestion, setAiQuestion] = useState('')
+  const [aiLoading, setAiLoading] = useState(false)
+  const [aiError, setAiError] = useState('')
   useEffect(() => { const onPop = () => setPath(window.location.pathname); window.addEventListener('popstate', onPop); return () => window.removeEventListener('popstate', onPop) }, [])
   useEffect(() => { let active = true; setOverviewLoading(true); Promise.all([fetch(`${API_URL}/api/metrics/`), fetch(`${API_URL}/api/states/`)]).then(async ([metricsResponse, statesResponse]) => { if (!metricsResponse.ok || !statesResponse.ok) throw new Error('Live overview unavailable'); const [liveMetrics, liveStates] = await Promise.all([metricsResponse.json(), statesResponse.json()]); if (active) { setMetrics(liveMetrics); setStates(liveStates.states || []); setOverviewError('') } }).catch((error) => { if (active) setOverviewError(error.message || 'Live overview unavailable') }).finally(() => { if (active) setOverviewLoading(false) }); return () => { active = false } }, [])
   function navigate(nextPath) { window.history.pushState({}, '', nextPath); setPath(nextPath) }
+  async function askForestAI(rawQuestion) {
+    const districtId = path.startsWith('/district/') ? decodeURIComponent(path.split('/')[2]) : ''
+    const nextQuestion = (rawQuestion ?? aiQuestion).trim()
+    if (!nextQuestion) return
+
+    setAiQuestion('')
+    setAiError('')
+    setAiLoading(true)
+
+    if (!districtId) {
+      setAiError('Open a district in FRA Monitor to use the live district explanation endpoint.')
+      setAiLoading(false)
+      return
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/api/ai/explain/${encodeURIComponent(districtId)}`)
+      if (!response.ok) {
+        throw new Error('The district explanation service did not return a valid response.')
+      }
+      const payload = await response.json()
+      const answer = payload?.explanation || 'No explanation was returned for this district.'
+      setAiError('')
+      setAiQuestion(answer)
+    } catch (error) {
+      setAiError(error.message || 'The AI explanation service is unavailable right now.')
+    } finally {
+      setAiLoading(false)
+    }
+  }
   const route = shellRoute(path)
   const districtId = path.startsWith('/district/') ? decodeURIComponent(path.split('/')[2]) : ''
   const content = route === '/' ? <ShellOverview metrics={metrics} states={states} navigate={navigate} loading={overviewLoading} error={overviewError} /> : route === '/forest-atlas' ? <ShellAtlas /> : route === '/fra-monitor' ? <ShellMonitor /> : route === '/state-intelligence' ? <ShellStateIntelligence states={states} navigate={navigate} /> : route === '/anomalies' ? <ShellAnomalies navigate={navigate} /> : route === '/reports' ? <ShellReports /> : route === '/about-fra' ? <ShellAboutFRA /> : <ShellDistrict districtId={districtId} navigate={navigate} />
-  return <div className="command-shell"><style>{APP_SHELL_STYLES}</style><aside className="shell-sidebar"><div className="shell-brand"><div className="brand-mark">वन</div><span><strong>वन Vision</strong><small>Forest Rights Intelligence</small></span></div><nav>{SHELL_NAV.map(([href, label, icon]) => <button key={href} className={route === href ? 'active' : ''} onClick={() => navigate(href)}><i><NavIcon type={icon} /></i><span>{label}</span>{route === href && <b>›</b>}</button>)}</nav><div className="sidebar-bottom"><button type="button" className={`sidebar-info ${route === '/about-fra' ? 'active' : ''}`} onClick={() => navigate('/about-fra')} aria-label="More about the Forest Rights Act" title="More about the Forest Rights Act"><NavIcon type="info" /><span>More about FRA</span></button></div></aside><main className="shell-main"><header className="shell-topbar"><div className="context-pill"><NavIcon type="terrain" /><span>India</span><em>•</em><span>Forest Rights</span></div></header><div className="shell-content">{content}</div></main><ForestAILauncher open={aiOpen} onToggle={() => setAiOpen((current) => !current)} onClose={() => setAiOpen(false)} onNavigate={(nextPath) => { navigate(nextPath); setAiOpen(false) }} /></div>
+  return <div className="command-shell"><style>{APP_SHELL_STYLES}</style><aside className="shell-sidebar"><div className="shell-brand"><div className="brand-mark">वन</div><span><strong>वन Vision</strong><small>Forest Rights Intelligence</small></span></div><nav>{SHELL_NAV.map(([href, label, icon]) => <button key={href} className={route === href ? 'active' : ''} onClick={() => navigate(href)}><i><NavIcon type={icon} /></i><span>{label}</span>{route === href && <b>›</b>}</button>)}</nav><div className="sidebar-bottom"><button type="button" className={`sidebar-info ${route === '/about-fra' ? 'active' : ''}`} onClick={() => navigate('/about-fra')} aria-label="More about the Forest Rights Act" title="More about the Forest Rights Act"><NavIcon type="info" /><span>More about FRA</span></button></div></aside><main className="shell-main"><header className="shell-topbar"><div className="context-pill"><NavIcon type="terrain" /><span>India</span><em>•</em><span>Forest Rights</span></div></header><div className="shell-content">{content}</div></main><ForestAILauncher open={aiOpen} onToggle={() => setAiOpen((current) => !current)} onClose={() => setAiOpen(false)} onNavigate={(nextPath) => { navigate(nextPath); setAiOpen(false) }} districtId={districtId} askQuestion={askForestAI} question={aiQuestion} onQuestionChange={setAiQuestion} submitting={aiLoading} error={aiError} /></div>
 }
 
 export default App
