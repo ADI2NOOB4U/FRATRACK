@@ -1,7 +1,7 @@
 import json
 from datetime import date
 
-from app.core.config import CLAIMS_FILE
+from app.core.config import CLAIMS_FILE, DEMO_REFERENCE_DATE
 
 DATA_FILE = CLAIMS_FILE
 
@@ -17,7 +17,7 @@ def calculate_processing_days(claim: dict) -> int | None:
     if claim["processing_date"]:
         processing = date.fromisoformat(claim["processing_date"])
     else:
-        processing = date(2026, 9, 4)
+        processing = DEMO_REFERENCE_DATE
 
     return (processing - submission).days
 

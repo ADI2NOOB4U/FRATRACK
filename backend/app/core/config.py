@@ -1,4 +1,5 @@
 import os
+from datetime import date
 from pathlib import Path
 from typing import Literal
 
@@ -7,6 +8,8 @@ DATA_DIR = Path(__file__).parent.parent / "data"
 STATES_FILE = DATA_DIR / "states.json"
 DISTRICTS_FILE = DATA_DIR / "districts.json"
 CLAIMS_FILE = DATA_DIR / "synthetic" / "claims_expanded.json"
+DISTRICT_MASTER_FILE = Path(__file__).resolve().parents[3] / "scripts" / "district_master__1_.csv"
+DEMO_REFERENCE_DATE = date.fromisoformat(os.getenv("DEMO_REFERENCE_DATE", "2026-09-04"))
 
 # Database settings (for future migration)
 # Can be: "json" | "sqlite" | "postgres"
@@ -21,10 +24,10 @@ MIN_PAGE_LIMIT = 1
 
 # Risk scoring thresholds
 RISK_THRESHOLDS = {
-    "LOW": (0, 30),
-    "MEDIUM": (30, 60),
-    "HIGH": (60, 85),
-    "CRITICAL": (85, 100),
+    "LOW": (0, 25),
+    "MEDIUM": (25, 50),
+    "HIGH": (50, 75),
+    "CRITICAL": (75, 100),
 }
 
 # Processing time thresholds (in days)
@@ -51,6 +54,22 @@ PROCESSING_DELAY_THRESHOLDS = {
     "ON_TIME": (0, 60),
     "DELAYED": (60, 120),
     "SEVERELY_DELAYED": (120, float("inf")),
+}
+
+ANOMALY_DELAY_THRESHOLDS = {
+    "MEDIUM": 180,
+    "HIGH": 365,
+}
+
+AREA_MISMATCH_THRESHOLDS = {
+    "MEDIUM": 30,
+    "HIGH": 60,
+}
+
+BACKLOG_THRESHOLDS = {
+    "MEDIUM": 20,
+    "HIGH": 30,
+    "CRITICAL": 40,
 }
 
 # Feature flags

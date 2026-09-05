@@ -2,7 +2,14 @@ import json
 from datetime import date
 from statistics import mean, stdev
 
-from app.core.config import CLAIMS_FILE
+from app.core.config import (
+    AREA_MISMATCH_THRESHOLDS,
+    ANOMALY_DELAY_THRESHOLDS,
+    BACKLOG_THRESHOLDS,
+    CLAIMS_FILE,
+    DEMO_REFERENCE_DATE,
+    RISK_THRESHOLDS,
+)
 from app.services.anomaly.ml_detector import MLAnomalyDetector, get_ml_detector
 from app.services.claim_service import claim_service
 
@@ -37,12 +44,12 @@ def processing_days(claim: dict) -> int:
     if claim.get("processing_date"):
         end = date.fromisoformat(claim["processing_date"])
     else:
-        end = date.today()
+        end = DEMO_REFERENCE_DATE
 
     return max((end - submission).days, 0)
 
 
-def detect_claim_anomalies(claim: dict) -> list[dict]:
+def detect_claim_anomalies(claim: dict, include_ml: bool = True) -> list[dict]:
     anomalies = []
 
     status = str(claim["status"]).lower()
@@ -50,9 +57,9 @@ def detect_claim_anomalies(claim: dict) -> list[dict]:
 
     # 1. Processing delay
     if status == "pending":
-        if days > 365:
+        if days > ANOMALY_DELAY_THRESHOLDS["HIGH"]:
             severity = "HIGH"
-        elif days > 180:
+        elif days > ANOMALY_DELAY_THRESHOLDS["MEDIUM"]:
             severity = "MEDIUM"
         else:
             severity = None
@@ -79,8 +86,8 @@ def detect_claim_anomalies(claim: dict) -> list[dict]:
             abs(claimed - recorded) / recorded
         ) * 100
 
-        if mismatch_percent > 30:
-            severity = "HIGH" if mismatch_percent > 60 else "MEDIUM"
+        if mismatch_percent > AREA_MISMATCH_THRESHOLDS["MEDIUM"]:
+            severity = "HIGH" if mismatch_percent > AREA_MISMATCH_THRESHOLDS["HIGH"] else "MEDIUM"
 
             anomalies.append({
                 "claim_id": claim["claim_id"],
@@ -98,7 +105,7 @@ def detect_claim_anomalies(claim: dict) -> list[dict]:
                 }
             })
 
-    detector = ml_detector()
+    detector = ml_detector() if include_ml else None
     if detector is not None:
         is_anomaly, raw_score, normalized_score = detector.predict(claim)
         if is_anomaly:
@@ -119,6 +126,29 @@ def detect_claim_anomalies(claim: dict) -> list[dict]:
     return anomalies
 
 
+def append_ml_anomalies(claim_anomalies: list[dict], claims: list[dict], predictions: dict | None = None) -> None:
+    if predictions is None:
+        detector = ml_detector()
+        if detector is None:
+            return
+        predictions = detector.predict_many(claims)
+    for claim in claims:
+        is_anomaly, raw_score, normalized_score = predictions.get(claim["claim_id"], (False, 0.0, 0.0))
+        if is_anomaly:
+            claim_anomalies.append({
+                "claim_id": claim["claim_id"],
+                "district_id": claim["district_id"],
+                "category": "ML_ANOMALY",
+                "severity": "HIGH" if normalized_score >= 80 else "MEDIUM",
+                "description": "Claim has an unusual combination of processing and area features",
+                "evidence": {
+                    "raw_score": round(raw_score, 4),
+                    "normalized_score": round(normalized_score, 2),
+                    "model": "isolation_forest",
+                },
+            })
+
+
 def district_backlog_anomaly(claims: list[dict]) -> list[dict]:
     if not claims:
         return []
@@ -131,8 +161,8 @@ def district_backlog_anomaly(claims: list[dict]) -> list[dict]:
 
     pending_rate = (pending / len(claims)) * 100
 
-    if pending_rate > 20:
-        severity = "HIGH" if pending_rate > 30 else "MEDIUM"
+    if pending_rate > BACKLOG_THRESHOLDS["MEDIUM"]:
+        severity = "HIGH" if pending_rate > BACKLOG_THRESHOLDS["HIGH"] else "MEDIUM"
 
         return [{
             "district_id": claims[0]["district_id"],
@@ -255,6 +285,12 @@ def calculate_risk_score(
 
     delay_rate = (len(delay_claims) / total_claims) * 100
     mismatch_rate = (len(mismatch_claims) / total_claims) * 100
+    ml_claims = {
+        a["claim_id"]
+        for a in claim_anomalies
+        if a["category"] == "ML_ANOMALY"
+    }
+    ml_rate = (len(ml_claims) / total_claims) * 100
 
     # ---------- COMPONENT SCORES ----------
 
@@ -301,24 +337,22 @@ def calculate_risk_score(
     )
 
     rejection_score = 20 if rejection_anomaly else 0
+    ml_score = min(10, round(ml_rate * 0.5, 2))
 
     total = min(
         delay_score +
         mismatch_score +
         backlog_score +
-        rejection_score,
+        rejection_score +
+        ml_score,
         100
     )
 
-    # More useful distribution than the old 70/40 thresholds
-    if total >= 75:
-        level = "CRITICAL"
-    elif total >= 50:
-        level = "HIGH"
-    elif total >= 25:
-        level = "MEDIUM"
-    else:
-        level = "LOW"
+    level = next(
+        level
+        for level, (lower, upper) in RISK_THRESHOLDS.items()
+        if lower <= total < upper or (level == "CRITICAL" and total <= upper)
+    )
 
     return {
         "risk_score": total,
@@ -342,16 +376,98 @@ def calculate_risk_score(
             {
                 "name": "Abnormal Rejection",
                 "score": rejection_score
+            },
+            {
+                "name": "ML Supporting Signal",
+                "score": ml_score,
+                "rate": round(ml_rate, 2)
             }
         ]
     }
 
 
-def analyze_district(district_id: str) -> dict:
+def analyze_districts(district_ids=None) -> dict[str, dict]:
     all_claims = load_claims()
-    district_claims = claim_service.get_all(district_id=district_id)
+    all_grouped: dict[str, list[dict]] = {}
+    for claim in all_claims:
+        all_grouped.setdefault(claim["district_id"], []).append(claim)
 
-    if not district_claims:
+    if district_ids is None:
+        grouped = all_grouped
+        requested_ids = set(all_grouped)
+    else:
+        requested_ids = set()
+        grouped: dict[str, list[dict]] = {}
+        for district_id in district_ids:
+            resolved = district_id
+            if hasattr(claim_service, "_resolve_district_ids"):
+                resolved_candidates = claim_service._resolve_district_ids(district_id)
+                if resolved_candidates:
+                    resolved = next(iter(resolved_candidates))
+            if resolved in all_grouped:
+                requested_ids.add(resolved)
+                grouped[resolved] = all_grouped[resolved]
+
+    rejection_rates = {
+        district_id: sum(str(claim["status"]).lower() == "rejected" for claim in claims) / len(claims) * 100
+        for district_id, claims in all_grouped.items()
+        if claims
+    }
+    rejection_values = list(rejection_rates.values())
+    average_rejection = mean(rejection_values) if rejection_values else 0
+    rejection_deviation = stdev(rejection_values) if len(rejection_values) > 1 else 0
+    detector = ml_detector()
+    ml_predictions = detector.predict_many([claim for claims in grouped.values() for claim in claims]) if detector is not None else {}
+
+    results = {}
+    for district_id, claims in grouped.items():
+        claim_anomalies = [anomaly for claim in claims for anomaly in detect_claim_anomalies(claim, include_ml=False)]
+        append_ml_anomalies(claim_anomalies, claims, ml_predictions)
+        district_anomalies = district_backlog_anomaly(claims)
+        rejection_rate = rejection_rates.get(district_id, 0)
+        if rejection_deviation:
+            z_score = (rejection_rate - average_rejection) / rejection_deviation
+            if z_score >= 2 or z_score >= 1.5:
+                severity = "HIGH" if z_score >= 2 else "MEDIUM"
+                district_anomalies.append({
+                    "district_id": district_id,
+                    "category": "ABNORMAL_REJECTION_RATE",
+                    "severity": severity,
+                    "description": f"Rejection rate of {rejection_rate:.1f}% is unusually high compared with other districts",
+                    "evidence": {
+                        "rejection_rate": round(rejection_rate, 2),
+                        "national_average_rate": round(average_rejection, 2),
+                        "z_score": round(z_score, 2),
+                    },
+                })
+        risk = calculate_risk_score(claims, claim_anomalies, district_anomalies)
+        results[district_id] = {
+            "district_id": district_id,
+            "total_claims": len(claims),
+            "anomalies": claim_anomalies,
+            "district_anomalies": district_anomalies,
+            **risk,
+        }
+
+    for district_id in requested_ids:
+        if district_id not in results:
+            results[district_id] = {
+                "district_id": district_id,
+                "total_claims": 0,
+                "anomalies": [],
+                "district_anomalies": [],
+                "risk_score": 0,
+                "risk_level": "LOW",
+                "components": [],
+            }
+    return results
+
+
+def analyze_district(district_id: str) -> dict:
+    resolved = claim_service._resolve_district_ids(district_id)
+    candidates = list(resolved) if resolved else [district_id]
+    results = analyze_districts(candidates)
+    if not results:
         return {
             "district_id": district_id,
             "total_claims": 0,
@@ -359,38 +475,15 @@ def analyze_district(district_id: str) -> dict:
             "district_anomalies": [],
             "risk_score": 0,
             "risk_level": "LOW",
-            "components": []
+            "components": [],
         }
-
-    claim_anomalies = []
-
-    for claim in district_claims:
-        claim_anomalies.extend(
-            detect_claim_anomalies(claim)
-        )
-
-    backlog = district_backlog_anomaly(district_claims)
-
-    rejection = district_rejection_anomaly(
-        district_claims,
-        all_claims
-    )
-
-    district_anomalies = backlog + rejection
-
-    risk = calculate_risk_score(
-        district_claims,
-        claim_anomalies,
-        district_anomalies
-    )
-
-    return {
-        "district_id": district_id,
-        "total_claims": len(district_claims),
-        "anomalies": claim_anomalies,
-        "district_anomalies": district_anomalies,
-        **risk
-    }
+    for key in candidates:
+        if key in results:
+            return results[key]
+    for value in results.values():
+        if value.get("district_id"):
+            return value
+    return next(iter(results.values()))
 
 
 if __name__ == "__main__":

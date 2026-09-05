@@ -25,7 +25,7 @@ RANDOM_SEED = 42
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DISTRICTS_PATH = os.path.join(BASE_DIR, "data", "districts.json")
 OUTPUT_DIR = os.path.join(BASE_DIR, "data", "synthetic")
-OUTPUT_PATH = os.path.join(OUTPUT_DIR, "claims.json")
+OUTPUT_PATH = os.path.join(OUTPUT_DIR, "claims_legacy.json")
 
 TOTAL_CLAIMS = 10000
 

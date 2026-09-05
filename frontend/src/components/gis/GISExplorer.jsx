@@ -145,9 +145,14 @@ function GISExplorer({ districtData, districtDataUrl = `${API_URL}/api/districts
 
   useEffect(() => {
     let active = true
-    Promise.all([fetch('/geojson/district_map.geojson'), fetch('/geojson/india_boundary.geojson')]).then(async ([districtResponse, boundaryResponse]) => {
-      if (!districtResponse.ok || !boundaryResponse.ok) throw new Error('Map boundary data unavailable')
-      const [districtPayload, boundaryPayload] = await Promise.all([districtResponse.json(), boundaryResponse.json()])
+    const districtPayloadPromise = window.__fraDistrictMapPromise || fetch('/geojson/district_map.geojson').then((response) => {
+      if (!response.ok) throw new Error('District map data unavailable')
+      return response.json()
+    })
+    window.__fraDistrictMapPromise ||= districtPayloadPromise
+    Promise.all([districtPayloadPromise, fetch('/geojson/india_boundary.geojson')]).then(async ([districtPayload, boundaryResponse]) => {
+      if (!boundaryResponse.ok) throw new Error('Map boundary data unavailable')
+      const boundaryPayload = await boundaryResponse.json()
       if (active) { setDistricts(districtPayload); setIndiaBoundary(boundaryPayload) }
     }).catch((loadError) => { if (active) { setStatus('error'); setError(loadError.message) } })
     return () => { active = false }

@@ -1,7 +1,8 @@
 from collections import defaultdict
 
+from app.services.anomaly.engine import analyze_districts
 from app.services.claim_service import claim_service
-from app.services.anomaly.engine import analyze_district
+from app.services.geospatial.geo import geo_service
 
 
 class MetricsService:
@@ -77,19 +78,30 @@ class MetricsService:
         ]
 
     def get_district_ranking(self, state_id: str | None = None):
+        claims = claim_service.get_all(state_id=state_id)
         grouped = defaultdict(list)
 
-        for claim in claim_service.get_all(state_id=state_id):
+        for claim in claims:
             grouped[claim["district_id"]].append(claim)
 
+        analyses = analyze_districts(list(grouped.keys()))
         result = []
 
-        for district_id, claims in grouped.items():
-            analysis = analyze_district(district_id)
+        for district_id, district_claims in grouped.items():
+            analysis = analyses.get(district_id, {
+                "risk_score": 0,
+                "risk_level": "LOW",
+            })
+            metadata = geo_service.get_district(district_id) or {}
 
             result.append({
                 "district_id": district_id,
-                **self._metrics(claims),
+                "district_name": metadata.get("district_name", district_claims[0].get("district_name", "")),
+                "state_id": metadata.get("state_id", district_claims[0].get("state_id", "")),
+                "state_name": metadata.get("state_name", district_claims[0].get("state_name", "")),
+                "latitude": metadata.get("latitude", district_claims[0].get("latitude")),
+                "longitude": metadata.get("longitude", district_claims[0].get("longitude")),
+                **self._metrics(district_claims),
                 "risk_score": analysis["risk_score"],
                 "risk_level": analysis["risk_level"],
             })

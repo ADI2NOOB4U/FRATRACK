@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, HTTPException
 from app.services.geospatial.geo import geo_service
 from app.services.metrics_service import metrics_service
 
@@ -28,7 +28,7 @@ def get_state(state_id: str):
     state = geo_service.get_state(state_id)
 
     if not state:
-        return {"error": "State not found"}
+        raise HTTPException(status_code=404, detail="State not found")
 
     return {
         **state,

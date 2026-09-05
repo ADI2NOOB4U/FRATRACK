@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Query
+from fastapi import APIRouter, HTTPException, Query
 
 from app.services.claim_service import claim_service
 
@@ -44,8 +44,6 @@ def get_claim(claim_id: str):
     claim = claim_service.get_by_id(claim_id)
 
     if not claim:
-        return {
-            "detail": "Claim not found"
-        }
+        raise HTTPException(status_code=404, detail="Claim not found")
 
     return claim

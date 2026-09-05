@@ -130,6 +130,25 @@ class MLAnomalyDetector:
         is_anomaly = bool(self.model.predict(scaled_features)[0] == -1)
         return is_anomaly, raw_score, normalized_score
 
+    def predict_many(self, claims: list[dict]) -> dict[str, tuple[bool, float, float]]:
+        if not self.is_trained or self.model is None or self.scaler is None or np is None:
+            return {}
+        valid = [(claim, self._extract_features(claim)) for claim in claims]
+        valid = [(claim, features) for claim, features in valid if features is not None]
+        if not valid:
+            return {}
+        matrix = self.scaler.transform(np.asarray([features for _, features in valid]))
+        raw_scores = self.model.score_samples(matrix)
+        labels = self.model.predict(matrix)
+        return {
+            claim["claim_id"]: (
+                bool(label == -1),
+                float(raw),
+                max(0.0, min(100.0, ((1.0 - float(raw)) / 2.0) * 100.0)),
+            )
+            for (claim, _), label, raw in zip(valid, labels, raw_scores)
+        }
+
 
 def get_ml_detector(claims_path: str | Path) -> Optional[MLAnomalyDetector]:
     """Train and return a detector, or ``None`` when training is unavailable."""
