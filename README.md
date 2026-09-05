@@ -93,3 +93,70 @@ Safe
 Moderate
 High
 Critical
+```
+
+#                 FRA Claim Data
+                      ↓
+                Data Processing
+                      ↓
+            Risk & Anomaly Analysis
+                      ↓
+               GIS / GeoJSON
+                  Boundaries
+                      ↓
+              Interactive Map
+                      ↓
+           Decision Support Layer
+                      ↓
+        ┌─────────────┴─────────────┐
+        ↓                           ↓
+   Risk Visualization         AI Insights
+        ↓                           ↓
+        └─────────────┬─────────────┘
+                      ↓
+                FRATRACK Dashboard
+
+
+# Administrative Boundary Data
+             ↓
+          GeoJSON
+             ↓
+        React-Leaflet
+             ↓
+      ┌───────────────┐
+      │   India Map   │
+      └───────┬───────┘
+              ↓
+       District Layer
+              ↓
+        Risk Coloring
+              ↓
+       Claims / Hotspots
+
+# FRATRACK/
+│
+├── frontend/
+│   │
+│   ├── public/
+│   │   └── geojson/
+│   │       ├── india_boundary.geojson
+│   │       └── district_map.geojson
+│   │
+│   └── src/
+│       ├── components/
+│       │   └── map/
+│       │       └── StateMap.jsx
+│       │
+│       ├── App.jsx
+│       ├── App.css
+│       ├── index.css
+│       └── main.jsx
+│
+├── backend/
+│   └── app/
+│       └── services/
+│           └── geospatial/
+│
+├── .gitignore
+├── README.md
+└── ...
