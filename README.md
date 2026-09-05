@@ -115,22 +115,30 @@ Critical
        Claims / Hotspots
 
 
-```md
 ## 📁 Project Structure
 
-- `frontend/`
-  - `public/geojson/`
-    - `india_boundary.geojson`
-    - `district_map.geojson`
-  - `src/`
-    - `components/map/`
-      - `StateMap.jsx`
-    - `App.jsx`
-    - `App.css`
-    - `index.css`
-    - `main.jsx`
-- `backend/`
-  - `app/`
-    - `services/geospatial/`
-- `.gitignore`
-- `README.md`
+<pre>
+FRATRACK/
+├── frontend/
+│   ├── public/
+│   │   └── geojson/
+│   │       ├── india_boundary.geojson
+│   │       └── district_map.geojson
+│   │
+│   └── src/
+│       ├── components/
+│       │   └── map/
+│       │       └── StateMap.jsx
+│       ├── App.jsx
+│       ├── App.css
+│       ├── index.css
+│       └── main.jsx
+│
+├── backend/
+│   └── app/
+│       └── services/
+│           └── geospatial/
+│
+├── .gitignore
+└── README.md
+</pre>
