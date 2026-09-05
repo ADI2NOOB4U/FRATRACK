@@ -1,4 +1,4 @@
-# 🌲 FRATRACK
+# 🌲 वन Vision
 
 ## AI-Powered Decision Support System for Forest Rights Act (FRA) Monitoring
 
@@ -15,11 +15,11 @@
 
 ## 🚀 Overview
 
-FRATRACK is an AI-powered GIS decision-support system designed to make Forest Rights Act (FRA) monitoring easier across India.
+वन Vision is an AI-powered GIS decision-support system designed to make Forest Rights Act (FRA) monitoring easier across India.
 
 FRA claim information is often geographically distributed across different states and districts, making it difficult to identify delays, irregularities, and high-risk areas.
 
-FRATRACK brings this information together in one platform using:
+वन Vision brings this information together in one platform using:
 
 - 🗺️ Interactive GIS mapping
 - 📊 District-level risk visualization
@@ -36,7 +36,7 @@ The goal is to help users quickly understand **where claims are located, where r
 
 ### 🗺️ Interactive GIS Map
 
-The map is a core decision-support component of FRATRACK rather than a decorative visualization.
+The map is a core decision-support component of वन Vision rather than a decorative visualization.
 
 Users can:
 
@@ -147,5 +147,5 @@ FRATRACK/
 
 🚀 **Vercel Deployment**
 
-👉 **[Live Application](YOUR_VERCEL_URL_HERE)**
+👉 **[वन Vision](YOUR_VERCEL_URL_HERE)**
 
