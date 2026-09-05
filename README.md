@@ -1,46 +1,46 @@
-# FRATRACK
+# 🌲 FRATRACK
 
-FRATRACK is a GIS-based decision-support system for monitoring and analyzing Forest Rights Act (FRA) claims across India.
+### AI-Powered Decision Support System for Forest Rights Act (FRA) Monitoring
 
-The project combines an interactive map, district-level risk visualization, claim-level information, and anomaly detection to help users identify high-risk areas and investigate claims geographically.
+[![React](...)](...)
+[![FastAPI](...)](...)
+[![Leaflet](...)](...)
 
-## Features
+---
 
-- Interactive India map
-- State and district boundaries
-- District-level risk visualization
-- Risk-based filtering
-- Clickable districts and claim locations
-- FRA claim markers
-- Marker clustering for large numbers of claims
-- Anomaly hotspot visualization
-- District-to-claim drill-down
-- Backend support for claim and risk data
-- GIS-based decision support
+## 🚀 Overview
 
-## Tech Stack
+FRATRACK is an AI-powered GIS decision-support system designed to help monitor Forest Rights Act (FRA) claims across India.
 
-### Frontend
-- React
-- Vite
-- Leaflet
-- React-Leaflet
+It combines geographical visualization, district-level claim data, risk analysis, and anomaly detection into a single interface, helping users identify high-risk regions and investigate suspicious or delayed claims.
 
-### Backend
-- Python
-- FastAPI
+---
 
-### GIS / Data
-- GeoJSON
-- District and administrative boundary data
-- Map-based risk and claim visualization
+## ✨ Key Features
 
-## Project Structure
+- 🗺️ **Interactive India Map** — Explore states and districts geographically
+- 📊 **Risk-Based Visualization** — Identify districts based on risk levels
+- 🔎 **District & Claim Drill-Down** — Select districts and individual claims
+- 🚨 **Anomaly Detection** — Highlight unusual or suspicious claim patterns
+- 📍 **Claim Mapping** — Visualize FRA claims directly on the map
+- 🔥 **Anomaly Hotspots** — Identify geographic concentrations of anomalies
+- 🎛️ **Risk Filters** — Focus only on Safe, Moderate, High, or Critical areas
+- 🤖 **AI-Assisted Insights** — Generate summaries for detected anomalies
+- 📈 **Decision Support Dashboard** — View state-wise progress and important indicators
+
+---
+
+## 🧠 How It Works
 
 ```text
-FRATRACK/
-├── frontend/       # React frontend and interactive GIS map
-├── backend/        # Backend APIs and services
-├── app/            # Application-level modules
-├── scripts/        # Utility and data-processing scripts
-└── README.md
+FRA Claim Data
+      ↓
+Data Processing
+      ↓
+Risk & Anomaly Analysis
+      ↓
+GIS / GeoJSON Layers
+      ↓
+Interactive Leaflet Map
+      ↓
+Decision Support Dashboard
