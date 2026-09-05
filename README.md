@@ -1,46 +1,95 @@
 # 🌲 FRATRACK
 
-### AI-Powered Decision Support System for Forest Rights Act (FRA) Monitoring
+## AI-Powered Decision Support System for Forest Rights Act (FRA) Monitoring
 
-[![React](...)](...)
-[![FastAPI](...)](...)
-[![Leaflet](...)](...)
+> 🗺️ A GIS-based platform for visualizing FRA claims, assessing district-level risk, and identifying potential anomalies across India.
+
+![FRATRACK](https://img.shields.io/badge/FRATRACK-FRA%20Monitoring-2ea44f)
+![React](https://img.shields.io/badge/Frontend-React-61dafb)
+![Vite](https://img.shields.io/badge/Build-Vite-646cff)
+![Leaflet](https://img.shields.io/badge/Maps-Leaflet-199900)
+![FastAPI](https://img.shields.io/badge/Backend-FastAPI-009688)
+![Python](https://img.shields.io/badge/Python-3.x-3776ab)
 
 ---
 
 ## 🚀 Overview
 
-FRATRACK is an AI-powered GIS decision-support system designed to help monitor Forest Rights Act (FRA) claims across India.
+FRATRACK is an AI-powered GIS decision-support system designed to make Forest Rights Act (FRA) monitoring easier across India.
 
-It combines geographical visualization, district-level claim data, risk analysis, and anomaly detection into a single interface, helping users identify high-risk regions and investigate suspicious or delayed claims.
+FRA claim information is often geographically distributed across different states and districts, making it difficult to identify delays, irregularities, and high-risk areas.
+
+FRATRACK brings this information together in one platform using:
+
+- 🗺️ Interactive GIS mapping
+- 📊 District-level risk visualization
+- 📍 FRA claim mapping
+- 🚨 Anomaly detection
+- 🤖 AI-assisted anomaly summaries
+- 📈 Decision-support insights
+
+The goal is to help users quickly understand **where claims are located, where risks are concentrated, and which areas may require attention.**
 
 ---
 
 ## ✨ Key Features
 
-- 🗺️ **Interactive India Map** — Explore states and districts geographically
-- 📊 **Risk-Based Visualization** — Identify districts based on risk levels
-- 🔎 **District & Claim Drill-Down** — Select districts and individual claims
-- 🚨 **Anomaly Detection** — Highlight unusual or suspicious claim patterns
-- 📍 **Claim Mapping** — Visualize FRA claims directly on the map
-- 🔥 **Anomaly Hotspots** — Identify geographic concentrations of anomalies
-- 🎛️ **Risk Filters** — Focus only on Safe, Moderate, High, or Critical areas
-- 🤖 **AI-Assisted Insights** — Generate summaries for detected anomalies
-- 📈 **Decision Support Dashboard** — View state-wise progress and important indicators
+### 🗺️ Interactive GIS Map
 
----
+The map is a core decision-support component of FRATRACK rather than a decorative visualization.
 
-## 🧠 How It Works
+Users can:
+
+- View India and district boundaries
+- Explore districts interactively
+- Select individual districts
+- Filter districts by risk level
+- View FRA claim locations
+- Drill down from districts to claims
+
+### 📊 Risk Visualization
+
+Districts can be visualized according to their risk level.
+
+| Risk Level | Visualization |
+|------------|---------------|
+| 🟢 Safe | Low-risk areas |
+| 🟡 Moderate | Areas requiring monitoring |
+| 🟠 High | Elevated-risk areas |
+| 🔴 Critical | Areas requiring immediate attention |
+
+Normal areas remain visually subdued while higher-risk districts are highlighted for easier identification.
+
+### 📍 FRA Claim Mapping
+
+Individual FRA claims can be displayed directly on the map.
+
+Users can select claim markers to inspect individual claim information.
+
+### 🚨 Anomaly Detection
+
+FRATRACK is designed to help identify potentially unusual patterns such as:
+
+- Delayed claims
+- Mismatched land records
+- Unusual claim concentrations
+- Potentially inconsistent claim information
+
+### 🔥 Anomaly Hotspots
+
+Geographical concentrations of anomalies can be highlighted as hotspots, helping users identify areas that may need further investigation.
+
+### 🤖 AI-Assisted Insights
+
+Detected anomalies can be summarized using AI/LLM-based analysis to provide concise, human-readable insights.
+
+### 🎛️ Risk Filters
+
+Users can focus the map on specific categories such as:
 
 ```text
-FRA Claim Data
-      ↓
-Data Processing
-      ↓
-Risk & Anomaly Analysis
-      ↓
-GIS / GeoJSON Layers
-      ↓
-Interactive Leaflet Map
-      ↓
-Decision Support Dashboard
+All
+Safe
+Moderate
+High
+Critical
